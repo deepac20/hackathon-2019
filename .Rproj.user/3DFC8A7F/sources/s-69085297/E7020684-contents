@@ -1,0 +1,38 @@
+library(shiny)
+library(shinydashboard)
+
+
+ui <- fluidPage(
+  titlePanel("Drug Review"),
+  dashboardSidebar(
+    sidebarMenu(
+      menuItemOutput("menuitem")
+    )
+  ),
+  dashboardBody(
+    selectInput("condition","Condition1",levels(data$condition),selected = "NONE"),
+    selectInput("drug","Drug2",levels(data$drugName),selected = "NONE")
+
+  )
+)
+
+server <- function(input, output, session) {
+  output$menuitem <- renderMenu({
+    menuItem("Menu item", icon = icon("calendar"))
+  })
+
+  heirarchy<-c("A","B","C")
+
+  observe({
+    hei1<-input$condition
+    hei2<-input$drug
+
+    choice1<-c("NONE",setdiff(heirarchy,c(hei2,hei3)))
+    choice2<-c("NONE",setdiff(heirarchy,c(hei1,hei3)))
+    choice3<-c("NONE",setdiff(heirarchy,c(hei1,hei2)))
+
+    updateSelectInput(session,"heir1",choices=choice1,selected=hei1)
+    updateSelectInput(session,"heir2",choices=choice2,selected=hei2)
+    updateSelectInput(session,"heir3",choices=choice3,selected=hei3)
+  })
+  }

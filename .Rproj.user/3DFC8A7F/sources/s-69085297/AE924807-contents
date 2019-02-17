@@ -1,0 +1,87 @@
+#
+# This is a Shiny web application. You can run the application by clicking
+# the 'Run App' button above.
+#
+# Find out more about building applications with Shiny here:
+#
+#    http://shiny.rstudio.com/
+#
+
+library(shiny)
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
+#library(ggmap)
+library(stringr)
+#library(jpeg)
+#library(grid)
+#library(rsconnect)
+library(data.table)
+
+#library(shiny)
+# Define UI for application that draws a histogram
+#
+data <- read.csv("data/drugsComTrain_raw.csv",
+                 stringsAsFactors = FALSE,
+                 header = TRUE,
+                 na.strings = c("", " ", "NA"))
+data <- data[!grepl("users found this comment helpful", data$condition),]
+
+data$drugName <- as.factor(data$drugName)
+data$condition <- as.factor(data$condition)
+data <-
+  data %>% separate(col = date, into = c("Date", "Month", "Year"), sep = "-", remove = FALSE, extra = "drop")
+data <- within(data, rm(Date))
+data$Year <- as.factor(data$Year)
+data$Month <- as.factor(data$Month)
+
+ui <- fluidPage(
+  titlePanel("Drug Review Analysis"),
+  sidebarLayout(
+
+    #
+    # Sidebar with a slider and selection inputs
+    sidebarPanel(
+      selectInput("condition", "Select Condition:", levels(data$condition)),
+      selectInput("drug", "Select Drug:", levels(data$drugName))
+      #selectInput("year", "Year:", (data$year)),
+      #hr(),
+      #tableOutput("table")
+    ),
+
+    # Show plot
+    mainPanel(
+      tableOutput("table")
+    )
+  )
+)
+
+
+# Define server logic required to draw a visualization
+server <- function(input, output) {
+  #output$table <- renderTable(data)
+  #output$mytable = DT::renderDataTable({
+  # DT::datatable(data[data$condition == input$condition, , drop = FALSE])
+  #})
+  temp <- reactive({
+
+    condition <- input$condition
+    drug <- input$drugName
+
+    #Apply filters
+    test <-
+      data %>%
+      filter(condition == condition,
+             drug == drugName)
+    test <- as.data.frame(test)
+    test
+  })
+  output$table <- renderTable(temp())
+
+
+
+}
+
+# Run the application
+shinyApp(ui = ui, server = server)
+

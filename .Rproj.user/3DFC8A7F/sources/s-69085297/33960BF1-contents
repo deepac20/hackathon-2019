@@ -1,0 +1,35 @@
+library(shiny)
+
+shinyApp(
+  ui = fluidPage(
+
+    titlePanel(title = "test"),
+    sidebarLayout(
+      sidebarPanel(
+        selectInput("var1", "Select the condtion",
+                    choices = data$condition
+        ),
+        uiOutput("select_drug_ui"),
+        br()
+      ),
+      mainPanel(
+        "data table",
+        tableOutput("mytable")
+      )
+    )
+  ),
+  server = function(input, output) {
+    output$select_drug_ui <- renderUI({
+      selectInput("var2", "Select the condtion",
+                  choices = data[data$condition %in% input$var1,"drug"]
+      )
+    })
+
+    output$mytable <- renderTable({
+      df_graph <- data[data$condtion == input$var1,]
+      df_graph <- df_graph[df_graph$drug == input$var2,]
+
+      df_graph
+    })
+  }
+)

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1550325805228.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "AE924807",
+    "lastKnownWriteTime" : 1550344416,
+    "last_content_update" : 1550344416096,
+    "path" : "~/drugAnalysis/app.R",
+    "project_path" : "app.R",
+    "properties" : {
+        "cursorPosition" : "74,29",
+        "scrollLine" : "57"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

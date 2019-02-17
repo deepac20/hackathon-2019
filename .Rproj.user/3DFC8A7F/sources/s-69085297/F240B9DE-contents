@@ -1,0 +1,65 @@
+#
+# This is a Shiny web application. You can run the application by clicking
+# the 'Run App' button above.
+#
+# Find out more about building applications with Shiny here:
+#
+#    http://shiny.rstudio.com/
+#
+
+library(shiny)
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+
+  ui = shinyUI(
+    fluidPage( #allows layout to fill browser window
+      titlePanel("Reactive select input boxes"),
+      #adds a title to page and browser tab
+      #-use "title = 'tab name'" to name browser tab
+      sidebarPanel( #designates location of following items
+        htmlOutput("condition_selector"),#add selectinput boxs
+        htmlOutput("drug_selector")# from objects created in server
+      ),
+
+      mainPanel(
+        dataTableOutput("table") #put plot item in main area
+      )
+    ) )
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+
+  output$condition_selector = renderUI({#creates State select box object called in ui
+    selectInput(inputId = "condition", #name of input
+                label = "Condition:", #label displayed in ui
+                choices = as.character(unique(data$condition)),
+                # calls unique values from the State column in the previously created table
+                selected = "abc") #default choice (not required)
+  })
+  output$drug_selector = renderUI({#creates County select box object called in ui
+
+    data_available = data[data$condition == input$condition, "Drug"]
+    #creates a reactive list of available counties based on the State selection made
+
+    selectInput(inputId = "drug", #name of input
+                label = "Drug:", #label displayed in ui
+                choices = unique(data_available), #calls list of available counties
+                selected = unique(data_available)[1])
+  })
+
+  #output$plot1 = renderPlot({ #creates a the plot to go in the mainPanel
+   # map('con', region = input$condtion)
+    #uses the map function based on the state selected
+    #map('county', region =paste(input$state,input$county, sep=','),
+     #   add = T, fill = T, col = 'red')
+    #adds plot of the selected county filled in red
+    #
+    output$table = renderTable(data_available)
+
+}#close the shinyServer
+
+# Run the application
+shinyApp(ui = ui, server = server)
+

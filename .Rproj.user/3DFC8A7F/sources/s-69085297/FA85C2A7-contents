@@ -1,0 +1,20 @@
+library(ggplot2)
+library(dplyr)
+library(ggpubr)
+theme_set(theme_pubr())
+data <- data[!grepl("users found this comment helpful", data$condition),]
+condition_df <- as.data.frame(sort(table(data$condition), decreasing = TRUE))
+drug_df <- as.data.frame(sort(table(data$drugName), decreasing = TRUE))
+names(condition_df) <- c("condition","count")
+names(drug_df) <- c("drug","count")
+
+ggplot(condition_df[1:20,], aes(x = condition, y = count, fill = factor(condition))) + geom_bar(stat = "identity") + 
+  theme(axis.text.x = element_text(angle = 70,hjust = 1), legend.position = "none") + scale_x_discrete(name = "Condition") + scale_y_continuous(name = "Count") + labs(title = "Most occured condition")
+
+ggplot(drug_df[1:20,], aes(x = drug, y = count, fill = factor(drug))) + geom_bar(stat = "identity") + 
+  theme(axis.text.x = element_text(angle = 70,hjust = 1), legend.position = "none") + scale_x_discrete(name = "Drug") + scale_y_continuous(name = "Count") + labs(title = "Most common drug")
+
+#df
+#head(data)
+ggplot(data = dfr, aes(x=condition, y = counts))+ geom_bar(stat = "identity")+
+  geom_text(aes(label = counts), vjust = -0.3) 
